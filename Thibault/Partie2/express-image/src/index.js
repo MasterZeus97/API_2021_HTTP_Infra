@@ -1,41 +1,37 @@
 var Chance = require('chance');
 var chance = new Chance();
 
-var express = require('express');
-var app = express();
+const express = require('express')
+const app = express()
+const port = 3000
 
-app.get('/', function(req, res){
-	res.send(generateStudents());
-});
+app.get('/', (req, res) => {
+  res.send('Quote of the day!\n')
+})
 
-app.listen(3000, function(){
-	console.log('Accepting HTTP request on port 3000');
-});
+app.get('/quote', (req, res) => {
+  res.send(generateQuote())
+})
 
-function generateStudents(){
-	var numberOfStudents = chance.integer({
-		min: 0,
-		max: 10
-	});
-	console.log(numberOfStudents);
-	var students = [];
-	for(var i = 0; i < numberOfStudents; i++){
-		var gender = chance.gender();
-		var birthYear = chance.year({
-			min: 1986,
-			max: 1996
-		});
-		students.push({
-			firstName: chance.first({
-				gender: gender
-			}),
-			lastName: chance.last(),
-			gender: gender,
-			birthday: chance.birthday({
-				year: birthYear
-			})
-		});
-	};
-	console.log(students);
-	return students;
+app.listen(port, () => {
+  console.log(`Accepting request on port ${port}`)
+})
+
+function generateQuote() {
+    var quote;
+
+    var gender = chance.gender()
+
+    quote = {
+        sentence : chance.sentence(),
+
+        firstName: chance.first({
+            gender: gender
+        }),
+        lastName: chance.last(),
+        country : chance.country()
+    }
+
+    console.log(quote)
+    return quote
 }
