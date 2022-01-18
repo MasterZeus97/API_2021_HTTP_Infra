@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  traefik:
+    image: "traefik:v2.5"
+    container_name: "traefik"
+    hostname: "traefik"
+    # active le dashboard
+    command:
+     - "--api.insecure=true"
+     - "--api.dashboard=true"
+     - "--providers.docker"
+     - "--log.level=DEBUG"
+    ports:
+     - "80:80"
+     - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    
+  apachephp: #
+    build: 
+      context: ./apache-php-image # //chemin du dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apachephp.rule=Host(`proxy.httpinfra.ch`)"
+      - "traefik.http.services.dynamicServices.loadbalancer.sticky.cookie=true"
+
+
+  expressimage: #
+    build: # //chemin du dockerfile
+      context: ./express-image
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.expressimage.rule=Host(`proxy.httpinfra.ch`) && PathPrefix(`/api/quote`)"
+      - "traefik.http.middlewares.expressimagepathstrip.stripprefix.prefixes=/api/quote"
+      - "traefik.http.routers.expressimage.middlewares=expressimagepathstrip"
+      - "traefik.http.services.dynamicServices.loadbalancer.sticky.cookie=true"
