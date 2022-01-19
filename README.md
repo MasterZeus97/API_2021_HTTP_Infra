@@ -4,3 +4,6 @@ Chaque dossier correspond à un step de la donnée du labo (sauf le step 6 qui c
 
 Les configurations indiquées dans le rapport ont été faites sur linux. Elle ne sont donc pas compatible avec Windows. Pour pouvoir l'utiliser sur Windows, il faudrait mapper les ports du container sur des ports de notre machine afin de les faire communiquer.
 
+
+
+Le rapport se trouve [ici](./Laboratoire_5_Infrastructure_HTTP.md).
